@@ -11,8 +11,11 @@
   "dependencies": {
     "bootstrap": "^4.0.0-beta.2",
     "bootstrap-vue": "^1.2.0",
+    "ie-quiz-dragdrop": "git+ssh://git@gitlab.com:iepublishing/web-components/ie-quiz-dragdrop.git",
+    "lodash": "^4.17.4",
     "popper.js": "^1.12.9",
     "vue": "^2.5.3",
+    "vuedraggable": "^2.16.0",
     "vuex": "^3.0.1"
   },
   "devDependencies": {

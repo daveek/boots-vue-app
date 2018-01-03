@@ -3,7 +3,18 @@
     <img src="./assets/bike-2018.jpg" width="300">
     <h1>{{ msg }}</h1>
     <h3>{{ msg2 }}</h3>
+    <div class="d-inline-flex p-3">
+      <p></p>
+        <input type="text" v-model="name" placeholder="Bitte, Schreibe deinen namen" class="form-control">
+        <b-form-group label="Gender">
+          <b-form-radio-group id="radios1" v-model="gender" :options="options" size="sm" name="radioOpenions">
+          </b-form-radio-group>
+        </b-form-group>
+    </div>
     <b-jumbotron header="Bootstrap Vue" lead="Bootstrap 4 Components for Vue.js 2" >
+      <h1 v-if="name">
+          {{ gender == 'm' ? 'Hallo, Willkomen Herr' : 'Hallo, Willkomen Frau' }} {{ name }}
+      </h1>
       <p>For more information visit website</p>
       <b-btn variant="primary" href="#">More Info</b-btn>
     </b-jumbotron>
@@ -22,7 +33,7 @@
       <li><a href="https://github.com/vuejs/awesome-vue" target="_blank">awesome-vue</a></li>
     </ul>
     <br><br>
-    <div class="d-flex justify-content-center">
+    <div class="d-flex flex-column">
     <div class="p-2">
       <b-carousel id="carousel1"
                   style="text-shadow: 1px 1px 2px #333;"
@@ -81,15 +92,38 @@
 </template>
 
 <script>
+import draggable from 'vuedraggable'
 export default {
   name: 'app',
+  components: { draggable },
+  props: ['instructions', 'sortableElements', 'panels', 'panels_name'],
   data () {
     return {
+      name: "",
+      gender: 'f',
+      options: ['f', 'm'],
       msg: 'Frohes neues jahr 2018!',
       msg2: 'Vue boots jahr development',
       slide: 0,
-      sliding: null
+      sliding: null,
+      dragItemsOptions: {
+          group: 'sortableElements',
+          animation: 150,
+          ghostClass: 'ghost-sortable-item', 
+          dragClass: 'dragging-sortable-item',
+          filter: ".ignore-elements"
+      },
+      panelsOptions: [],
+      mutableSortableElements: this.sortableElements,
+      mutablePanels: this.panels
     }
+  },
+  mounted: function () {
+      var clonedOptionsObj;
+      for(var i = 0; i < this.panels.length; i++){
+          clonedOptionsObj = _.clone(this.dragItemsOptions);
+          this.panelsOptions.push(clonedOptionsObj);
+      }
   },
   methods: {
     onSlideStart (slide) {
@@ -97,6 +131,29 @@ export default {
     },
     onSlideEnd (slide) {
       this.sliding = false
+    },
+    dropElementInPanel: function(e){
+        if(this.mutablePanels[e.to.id][0].panel == (+e.to.id + 1)/* && this.mutablePanels[e.to.id].length == 1*/){
+            this.mutablePanels[e.to.id][0].sorted = true;
+            this.panelsOptions[e.to.id].disabled = true;
+        }
+        else{
+            var elementRemoved = this.panels[e.to.id].shift();
+            this.mutableSortableElements.push(elementRemoved)
+        }
+    },
+    sortedItem: function(id){
+        return this.mutablePanels[id][0].sorted;
+    },
+    cloneOptions: function(i){
+        /*console.log('ENTRA EN CLONAR ' + i)
+        var clonedOptionsObj = _.clone(this.dragItemsOptions);
+        this.panelsOptions[i] = clonedOptionsObj;
+        /*this.panelsOptions.push(clonedOptionsObj);*/
+        //return clonedOptionsObj;
+        
+        //console.log(this.panelsOptions[i])
+        return this.panelsOptions[i];
     }
   }
 }
@@ -129,4 +186,36 @@ li {
 a {
   color: #42b983;
 }
+.panel-usorted-elements{
+    margin-top: 90px;
+}
+.draggable-component{
+    min-height: 40px;
+    display: block; 
+}
+.dragable-li{
+    background-color: #fff;
+    padding: 8px;
+    margin: 12px 0px;
+    cursor: move;
+    border: 1px solid #ccc;
+}
+.panel-body .dragable-li{
+    margin: 0px;
+}
+.ghost-sortable-item{
+    opacity: 0.75;
+    border: 2px dashed #ccc;
+}
+.dragging-sortable-item{
+    color: #fff;
+    background-color: rgb(0,51,141);
+    opacity: 1;
+    border: 1px solid #ccc;
+}
+.ignore-elements{
+    cursor: no-drop;
+    background-color: #e9eedc;
+}
+
 </style>
