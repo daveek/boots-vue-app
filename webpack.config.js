@@ -48,12 +48,16 @@ module.exports = {
   },
   resolve: {
     alias: {
-      'vue$': 'vue/dist/vue.esm.js'
-    }
+      'vue$': 'vue/dist/vue.esm.js',
+      'src': path.join(__dirname, 'src'),
+      'components': path.join(__dirname, 'src/components')
+    },
+    extensions: ['*', '.js', '.vue', '.css', '.json']
   },
   devServer: {
     historyApiFallback: true,
-    noInfo: true
+    noInfo: true,
+    port: 9000
   },
   performance: {
     hints: false

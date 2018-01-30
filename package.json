@@ -5,7 +5,7 @@
   "author": "Dave Rojas <dave.rojas@ie.edu>",
   "private": true,
   "scripts": {
-    "dev": "cross-env NODE_ENV=development webpack-dev-server --open --hot",
+    "dev": "cross-env NODE_ENV=development webpack-dev-server --open --hot --host d-rojas.ie.es",
     "build": "cross-env NODE_ENV=production webpack --progress --hide-modules"
   },
   "dependencies": {
@@ -15,6 +15,7 @@
     "lodash": "^4.17.4",
     "popper.js": "^1.12.9",
     "vue": "^2.5.3",
+    "vue-router": "^3.0.1",
     "vuedraggable": "^2.16.0",
     "vuex": "^3.0.1"
   },

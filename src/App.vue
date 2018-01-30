@@ -1,38 +1,13 @@
 <template>
   <div id="app">
-    <img src="./assets/bike-2018.jpg" width="300">
-    <h1>{{ msg }}</h1>
-    <h3>{{ msg2 }}</h3>
-    <div class="d-inline-flex p-3">
-      <p></p>
-        <input type="text" v-model="name" placeholder="Bitte, Schreibe deinen namen" class="form-control">
-        <b-form-group label="Gender">
-          <b-form-radio-group id="radios1" v-model="gender" :options="options" size="sm" name="radioOpenions">
-          </b-form-radio-group>
-        </b-form-group>
-    </div>
-    <b-jumbotron header="Bootstrap Vue" lead="Bootstrap 4 Components for Vue.js 2" >
-      <h1 v-if="name">
-          {{ gender == 'm' ? 'Hallo, Willkomen Herr' : 'Hallo, Willkomen Frau' }} {{ name }}
-      </h1>
-      <p>For more information visit website</p>
-      <b-btn variant="primary" href="#">More Info</b-btn>
-    </b-jumbotron>
-    <h2>Essential Links</h2>
-    <ul>
-      <li><a href="https://vuejs.org" target="_blank">Core Docs</a></li>
-      <li><a href="https://forum.vuejs.org" target="_blank">Forum</a></li>
-      <li><a href="https://gitter.im/vuejs/vue" target="_blank">Gitter Chat</a></li>
-      <li><a href="https://twitter.com/vuejs" target="_blank">Twitter</a></li>
-    </ul>
-    <h2>Ecosystem</h2>
-    <ul>
-      <li><a href="http://router.vuejs.org/" target="_blank">vue-router</a></li>
-      <li><a href="http://vuex.vuejs.org/" target="_blank">vuex</a></li>
-      <li><a href="http://vue-loader.vuejs.org/" target="_blank">vue-loader</a></li>
-      <li><a href="https://github.com/vuejs/awesome-vue" target="_blank">awesome-vue</a></li>
-    </ul>
-    <br><br>
+    <keep-alive>
+      <router-view>
+        <div is="content-nav"></div>
+        <div class="d-flex p-2">
+          <!-- <ie-dragger></ie-dragger> -->
+        </div>
+      </router-view>
+    </keep-alive>
     <div class="d-flex flex-column">
     <div class="p-2">
       <b-carousel id="carousel1"
@@ -92,38 +67,27 @@
 </template>
 
 <script>
-import draggable from 'vuedraggable'
+
+import home from 'components/home.vue'
+import Draggerit from 'components/Dragger.vue'
+import content_nav from 'components/Navigation.vue'
+
 export default {
   name: 'app',
-  components: { draggable },
-  props: ['instructions', 'sortableElements', 'panels', 'panels_name'],
+  components: { 
+    'ie-dragger': Draggerit,
+    'content-nav': content_nav
+  },
   data () {
     return {
-      name: "",
-      gender: 'f',
-      options: ['f', 'm'],
-      msg: 'Frohes neues jahr 2018!',
-      msg2: 'Vue boots jahr development',
+      title: 'Privacy and Regulation in a Digital World',
+      sections: [
+          { ruta: 'home',             enlace:'home',                  opened: true },
+          { ruta: 'laws-regulation',  enlace:'Laws &amp; Regulations',  opened: false }
+      ],
       slide: 0,
-      sliding: null,
-      dragItemsOptions: {
-          group: 'sortableElements',
-          animation: 150,
-          ghostClass: 'ghost-sortable-item', 
-          dragClass: 'dragging-sortable-item',
-          filter: ".ignore-elements"
-      },
-      panelsOptions: [],
-      mutableSortableElements: this.sortableElements,
-      mutablePanels: this.panels
+      sliding: null
     }
-  },
-  mounted: function () {
-      var clonedOptionsObj;
-      for(var i = 0; i < this.panels.length; i++){
-          clonedOptionsObj = _.clone(this.dragItemsOptions);
-          this.panelsOptions.push(clonedOptionsObj);
-      }
   },
   methods: {
     onSlideStart (slide) {
@@ -131,29 +95,6 @@ export default {
     },
     onSlideEnd (slide) {
       this.sliding = false
-    },
-    dropElementInPanel: function(e){
-        if(this.mutablePanels[e.to.id][0].panel == (+e.to.id + 1)/* && this.mutablePanels[e.to.id].length == 1*/){
-            this.mutablePanels[e.to.id][0].sorted = true;
-            this.panelsOptions[e.to.id].disabled = true;
-        }
-        else{
-            var elementRemoved = this.panels[e.to.id].shift();
-            this.mutableSortableElements.push(elementRemoved)
-        }
-    },
-    sortedItem: function(id){
-        return this.mutablePanels[id][0].sorted;
-    },
-    cloneOptions: function(i){
-        /*console.log('ENTRA EN CLONAR ' + i)
-        var clonedOptionsObj = _.clone(this.dragItemsOptions);
-        this.panelsOptions[i] = clonedOptionsObj;
-        /*this.panelsOptions.push(clonedOptionsObj);*/
-        //return clonedOptionsObj;
-        
-        //console.log(this.panelsOptions[i])
-        return this.panelsOptions[i];
     }
   }
 }
@@ -185,37 +126,6 @@ li {
 
 a {
   color: #42b983;
-}
-.panel-usorted-elements{
-    margin-top: 90px;
-}
-.draggable-component{
-    min-height: 40px;
-    display: block; 
-}
-.dragable-li{
-    background-color: #fff;
-    padding: 8px;
-    margin: 12px 0px;
-    cursor: move;
-    border: 1px solid #ccc;
-}
-.panel-body .dragable-li{
-    margin: 0px;
-}
-.ghost-sortable-item{
-    opacity: 0.75;
-    border: 2px dashed #ccc;
-}
-.dragging-sortable-item{
-    color: #fff;
-    background-color: rgb(0,51,141);
-    opacity: 1;
-    border: 1px solid #ccc;
-}
-.ignore-elements{
-    cursor: no-drop;
-    background-color: #e9eedc;
 }
 
 </style>
